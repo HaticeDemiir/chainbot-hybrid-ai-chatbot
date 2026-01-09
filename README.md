@@ -120,3 +120,9 @@ This project was developed as a **team-based graduation project**.
 - **Hatice Demir** 
 - **Bahar Davutoğlu**
 - **Zeynep Aktaş**
+
+## Academic Note
+
+This project was developed as a graduation project for academic purposes.
+The architecture and datasets are representative and can be adapted to different domains.
+
