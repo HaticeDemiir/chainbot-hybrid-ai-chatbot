@@ -124,5 +124,6 @@ This project was developed as a **team-based graduation project**.
 ## Academic Note
 
 This project was developed as a graduation project for academic purposes.
-The architecture and datasets are representative and can be adapted to different domains.
+The architecture and datasets are representative and do not belong to any real company.
+
 
