@@ -43,7 +43,7 @@ def size_chain():
             }
 
             if beden_tipi == "giyim":
-                # Mevcut giyim bedeni kontrolü
+
                 result = graph.query("""
                                    MATCH (u:UID {value: $uid})-[:HAS_SIZE]->(s:Size)
                                    RETURN s.beden AS beden, s.gender AS gender
@@ -54,7 +54,7 @@ def size_chain():
                     link = f"https://www.lcwaikiki.de/tr-TR/DE/{'kadin' if gender == 'Kadın' else 'erkek'}/giyim?LastFilter=sizeheight&sizeheight={giyim_kod_map.get(beden)}"
                     return {"generation": f"Sistemde kayıtlı giyim bedeniniz: {beden}\n[LC Waikiki’de bu bedendeki {gender.lower()} giyim ürünlerine göz atın]({link})"}
 
-                # Ölçü bilgileri al
+
                 gender = graph.query("""
                                                             MATCH (u:UID {value:$uid})-[r:HAS_NAME]->(n)
                                                             WHERE n.gender IS NOT NULL
@@ -150,7 +150,7 @@ def size_chain():
                 except ValueError:
                     return {"generation": "Lütfen geçerli ölçüm girin."}
                 mm = cm * 10
-                # Numara eşleşmesini kontrol et
+
                 ayakkabi = graph.query("""
                                    MATCH (s:ShoeSize {mm: $numara})
                                    RETURN s.numara AS Numara
@@ -159,7 +159,7 @@ def size_chain():
                 if not ayakkabi:
                     return {"generation": "Bu numarada bir ayakkabı bulunamadı."}
 
-                # Kullanıcı ile ayakkabı numarasını ilişkilendir
+
                 graph.query("""
                                    MATCH (u:UID {value: $uid})
                                    MATCH (s:ShoeSize {mm: $mm})

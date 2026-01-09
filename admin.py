@@ -91,7 +91,7 @@ def draw_category_only_graph(segment_id: int, driver):
         sid = f's_{s["id"]}'
         net.add_node(sid, label=f'FinalSegment\nID: {s["id"]}', color='orange')
 
-        # En yüksek ratio'yu bul
+
         max_ratio = 0
         for item in categories:
             rel = item.get("rel")
@@ -105,10 +105,10 @@ def draw_category_only_graph(segment_id: int, driver):
                 cid = f'c_{c["name"]}'
                 label = wrap_by_word_count(format_rel_label(rel), words_per_line=3)
 
-                # Ratio'ya göre kalınlık (node boyutu) belirle
-                node_size = 20  # varsayılan boyut
+
+                node_size = 20
                 if rel and "ratio" in rel and rel["ratio"] == max_ratio:
-                    node_size = 40  # en yüksek ratio'ya sahip olan node daha büyük görünsün
+                    node_size = 40
 
                 net.add_node(cid, label=f'Category\n{c["name"]}', color='lightgreen', size=node_size)
                 net.add_edge(sid, cid, label=label, color='green')
@@ -149,16 +149,14 @@ def draw_segment_graph_pyvis(segment_id: int, driver):
 
     with driver.session() as session:
         result = session.run(cypher_query)
-        records = list(result)  # Sonuçları listeye alıyoruz
+        records = list(result)
         print(f"Record sayısı: {len(records)}")
         if len(records) == 0:
             print("Hiç kayıt yok.")
-            return  # Kayıt yoksa fonksiyondan çıkıyoruz
+            return
         else:
             print("Kayıt var, işleme devam ediliyor.")
 
-        # records listesinden çektiğimiz için, tekrar result üzerinden dönersek boş olur.
-        # Bu yüzden aşağıdaki döngü records üzerinde olmalı:
         for record in records:
             s = record["s"]
             categories = record["categories"]
@@ -167,7 +165,7 @@ def draw_segment_graph_pyvis(segment_id: int, driver):
             sid = f's_{s["id"]}'
             net.add_node(sid, label=f'FinalSegment\nID: {s["id"]}', color='orange')
 
-            # Kategoriler ve ilişkiler
+
             for item in categories:
                 c = item.get("cat")
                 rel = item.get("rel")
@@ -177,7 +175,7 @@ def draw_segment_graph_pyvis(segment_id: int, driver):
                     label = format_rel_label(rel)
                     net.add_edge(sid, cid, label=label, color='green')
 
-            # SegmentCluster node'ları
+
             for sc in clusters:
                 if sc:
                     sc_label = f'{sc["name"]}'
@@ -191,7 +189,7 @@ def draw_segment_graph_pyvis(segment_id: int, driver):
     os.makedirs(output_dir, exist_ok=True)
 
     output_file = os.path.join(output_dir, f"segment_{segment_id}_graph.html")
-    net.write_html(output_file)  # Tarayıcıda otomatik açma, sadece dosyaya yaz
+    net.write_html(output_file)
     print(f"Segment {segment_id} için grafik dosyası oluşturuldu: {output_file}")
 
 def get_segment_questions():
@@ -217,14 +215,14 @@ def get_final_segment_id(answers: dict, graph: Neo4jGraph) -> str | None:
         segment_id string veya None
     """
     try:
-        # Gerekli değerlerin varlığını kontrol et
+
         age = int(answers.get("age", -1))
         customer_type = str(answers.get("customer_type", "")).strip()
         income = str(answers.get("income", "")).strip()
         shopping_count = int(answers.get("shopping_count", -1))
         total_spend = float(answers.get("total_spend", -1))
 
-        # Temizleme ve normalizasyon (veritabanı ile uyumlu olacak şekilde)
+
         customer_type = customer_type.lower().capitalize()
         income = income.lower().capitalize()
 
@@ -249,7 +247,7 @@ def get_final_segment_id(answers: dict, graph: Neo4jGraph) -> str | None:
                 print(f"Uygun cluster bulunamadı: {param}")
                 return None
 
-        # Final segment sorgusu: tüm clusterları içeren segmenti bul
+
         seg_match = graph.query("""
             UNWIND $ids AS cid
             MATCH (sc:SegmentCluster {id: cid})
@@ -335,7 +333,7 @@ def get_category_indexes_from_csv(segment_infos, max_indexes, csv_path="Datas\\s
 
             category_info.append((category_name, index, max_index))
         else:
-            print(f"⚠ {category_name} için eşleşme bulunamadı.")
+            print(f" {category_name} için eşleşme bulunamadı.")
 
     return category_info
 
@@ -369,20 +367,20 @@ def build_llm_summaries(segment_infos, category_indexes):
         predicted_ratio = round(info["predicted_ratio"] * 100, 2)
         discount_ratio = round(info["discount_ratio"] * 100, 2)
 
-        # LLM'e verilecek prompt
+
         user_prompt = (
             f"{segment_id} numaralı segmentin {category_name} kategorisinde alışveriş yapma olasılığı %{predicted_ratio} ve bu kategoriye özel önerilen indirim %{discount_ratio}. "
             f"Segment, bu kategori için {segment_index}. sırada yer alıyor (Toplam: {max_index} segment). "
             f"Bunu kullanarak kullanıcıya yönelik kısa ve açıklayıcı bir özet yaz."
         )
 
-        # LLM'den cevap al
+
         response = llm.invoke([HumanMessage(content=user_prompt)])
         summaries.append(response.content)
 
     return summaries
 
-# Ana döngü başlatılıyor
+
 
 
 while True:
@@ -426,7 +424,7 @@ while True:
             if segment_input.lower() == "çıkış":
                 continue
             segment_id = int(segment_input)
-            #draw_segment_graph_pyvis(segment_id, driver)  # pyvis fonksiyonunu çağır
+
             draw_cluster_only_graph(segment_id, driver)
             draw_category_only_graph(segment_id, driver)
         except ValueError:
@@ -437,7 +435,7 @@ while True:
 
     elif choice == "4":
 
-        # Kullanıcıdan cevapları al
+
 
         answers = {}
 
@@ -457,7 +455,7 @@ while True:
 
                     print("Lütfen geçerli bir değer girin.")
 
-        # Segment id bul
+
 
         segment_id = get_final_segment_id(answers, graph)
 

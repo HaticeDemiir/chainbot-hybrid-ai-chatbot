@@ -19,7 +19,7 @@ def wrap_by_word_count(text, words_per_line=15):
     lines = [' '.join(words[i:i + words_per_line]) for i in range(0, len(words), words_per_line)]
     return '\n'.join(lines)
 
-# Neo4j setup
+
 graph = Neo4jGraph(
     url=os.getenv("NEO4J_URI"),
     username=os.getenv("NEO4J_USERNAME"),
@@ -27,7 +27,7 @@ graph = Neo4jGraph(
     database=os.getenv("NEO4J_DATABASE")
 )
 
-# LLM Setup
+
 store = {}
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     if session_id not in store:
@@ -97,7 +97,7 @@ def chat():
             session_uid = None
             asked_uid = False
             extraction_list = []
-            store["menu_stage"] = "awaiting_first_message"  # <-- eksikti
+            store["menu_stage"] = "awaiting_first_message"
 
             print(" Yeni kullanıcı olarak başlatıldı.")
             continue
@@ -220,7 +220,7 @@ def chat():
                 continue
 
         state = {"question": question}
-        # ID'siz devam ediliyorsa ve UID gerektiren bir işlem sorulursa menüye yönlendir
+
         uid_gerektiren_kelimeler = ["indirim", "kampanya", "geçmiş", "alışveriş", "benim", "kişisel", "beden", "numara"]
         if not session_uid and any(word in question.lower() for word in uid_gerektiren_kelimeler):
             print("⚠ Bu işlem için kullanıcı ID’niz gereklidir. Lütfen kimlik doğrulaması yapınız.")

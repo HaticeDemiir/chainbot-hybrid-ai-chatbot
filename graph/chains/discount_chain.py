@@ -14,7 +14,7 @@ graph = Neo4jGraph(
 
 def handle_user_and_segment():
     try:
-        # Kullanıcıdan bilgi al
+
         age = int(input("Yaşınız kaç? "))
         customer_segment = input("Müşteri tipiniz nedir? (New/Regular/Premium): ")
         income = input("Gelir seviyenizi seçin (Low/Medium/High): ")
@@ -23,7 +23,7 @@ def handle_user_and_segment():
 
         segment_clusters = []
 
-        # Segment eşleştirme sorguları
+
         queries = [
             ("""
              MATCH (sc:SegmentCluster)
@@ -62,13 +62,13 @@ def handle_user_and_segment():
             if result and result[0].get("cluster_id"):
                 segment_clusters.append(result[0]["cluster_id"])
 
-        # UID oluştur
+
         result = graph.query("MATCH (u:UID) RETURN MAX(toInteger(u.value)) AS max_uid")
         max_uid = result[0]["max_uid"] if result and result[0]["max_uid"] is not None else 0
         uid_value = str(max_uid + 1).zfill(4)
         graph.query("CREATE (u:UID {value: $uid_value})", params={"uid_value": uid_value})
 
-        # FinalSegment ile eşleşme
+
         segment_query = """
             UNWIND $cluster_ids AS cluster_id
             MATCH (sc:SegmentCluster {id: cluster_id})
@@ -122,9 +122,9 @@ def discount():
                 return {"generation": "Bir hata oluştu."}
             uid_value = response.get("uid")
             if not uid_value:
-                return response  # segment bulunamadı gibi dönüş
+                return response
 
-        # Segment kontrolü
+
         check_query = """
             MATCH (u:UID {value: $uid_value})-[:HAS_SEGMENT]->(fs:FinalSegment)
             RETURN fs.id AS final_segment_id

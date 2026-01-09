@@ -1,5 +1,3 @@
-#GRAPH
-
 from langgraph.graph import StateGraph, END
 from graph.chains.router import question_router, RouteQuery
 from graph.node_constants import RETRIEVE, GRADE_DOCUMENTS, GENERATE, WEBSEARCH, LLM_RESPONSE, KNOWLEGDE_GRAPH, EXTRACT
@@ -7,17 +5,16 @@ from graph.nodes import generate, grade_documents, retrieve, web_search, llm_res
 from graph.state import GraphState
 
 
-# ✅ LangGraph yapısına uygun olarak artık {"next": ..., "state": ...} döndürülüyor
 def route_question(state: GraphState) -> str:
     print("---ROUTE QUESTION---")
     question = state["question"]
 
-    # Route sorgusu
-    route_query: RouteQuery = question_router.invoke({"question": question})
-    datasource = route_query.datasource  # bu bir string
-    state["source"] = datasource  # state'e de ekle
 
-    # Sadece string return!
+    route_query: RouteQuery = question_router.invoke({"question": question})
+    datasource = route_query.datasource
+    state["source"] = datasource
+
+
     if datasource == "websearch":
         print("---ROUTE QUESTION TO WEB SEARCH---")
         return WEBSEARCH

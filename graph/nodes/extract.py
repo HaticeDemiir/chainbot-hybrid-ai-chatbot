@@ -1,5 +1,3 @@
-#EXTRACT
-
 from graph.state import GraphState
 from neo4j import GraphDatabase
 from langchain_community.graphs import Neo4jGraph

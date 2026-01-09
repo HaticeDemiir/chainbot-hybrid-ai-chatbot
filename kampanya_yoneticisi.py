@@ -14,14 +14,13 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from graph.graph import app
 from langchain_community.graphs import Neo4jGraph
 
-#Graph Zeynep
-NEO4J_URI="neo4j+ssc://ae504ea9.databases.neo4j.io"
-NEO4J_USERNAME="neo4j"
-NEO4J_PASSWORD="7PD6uEL8HLpzUFV5UamAkeOvCN6BDBsuu8eFYqMBP30"
-AURA_INSTANCEID="ae504ea9"
+NEO4J_URI="XXXX"
+NEO4J_USERNAME="XXXX"
+NEO4J_PASSWORD="XXXX"
+AURA_INSTANCEID="XXXX"
 AURA_INSTANCENAME="Free instance"
 
-# Neo4j bağlantısı
+
 graph2 = Neo4jGraph(
     url=NEO4J_URI,
     username=NEO4J_USERNAME,
@@ -31,13 +30,13 @@ graph2 = Neo4jGraph(
 
 def get_segment_discount_info():
     try:
-        segment_input = input("📌 Hangi segmentin indirim oranını öğrenmek istersiniz? (Çıkmak için 'çıkış' yazın) ").strip()
+        segment_input = input(" Hangi segmentin indirim oranını öğrenmek istersiniz? (Çıkmak için 'çıkış' yazın) ").strip()
         if segment_input.lower() == 'çıkış':
             return None
 
         segment_input = int(segment_input)
     except ValueError:
-        print("❗ Lütfen geçerli bir sayı girin.")
+        print(" Lütfen geçerli bir sayı girin.")
         return None
 
     query = """
@@ -61,10 +60,10 @@ def get_segment_discount_info():
 
             return segment_info_list
         else:
-            print("❗ Belirtilen segmente ait bilgi bulunamadı.")
+            print(" Belirtilen segmente ait bilgi bulunamadı.")
             return None
     except Exception as e:
-        print(f"🚨 Hata oluştu: {e}")
+        print(f" Hata oluştu: {e}")
         return None
 
 
@@ -124,25 +123,25 @@ def build_llm_summaries(segment_infos, category_indexes):
         predicted_ratio = round(info["predicted_ratio"] * 100, 2)
         discount_ratio = round(info["discount_ratio"] * 100, 2)
 
-        # LLM'e verilecek prompt
+
         user_prompt = (
             f"{segment_id} numaralı segmentin {category_name} kategorisinde alışveriş yapma olasılığı %{predicted_ratio} ve bu kategoriye özel önerilen indirim %{discount_ratio}. "
             f"Segment, bu kategori için {segment_index}. sırada yer alıyor (Toplam: {max_index} segment). "
             f"Bunu kullanarak kullanıcıya yönelik kısa ve açıklayıcı bir özet yaz."
         )
 
-        # LLM'den cevap al
+
         response = llm.invoke([HumanMessage(content=user_prompt)])
         summaries.append(response.content)
 
     return summaries
 
-# Ana döngü başlatılıyor
+
 while True:
     segment_infos = get_segment_discount_info()
 
     if segment_infos is None:
-        print("🛑 Çıkılıyor...")
+        print(" Çıkılıyor...")
         break
 
     max_indexes = get_category_max_indexes()
@@ -150,6 +149,6 @@ while True:
 
     summary_messages = build_llm_summaries(segment_infos, category_indexes)
 
-    print("\n📌 Özetler:")
+    print("\n Özetler:")
     for msg in summary_messages:
         print(msg)

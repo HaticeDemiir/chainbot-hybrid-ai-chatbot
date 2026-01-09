@@ -4,7 +4,7 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 
-# LLM ve Store
+
 model = ChatOpenAI(model="gpt-3.5-turbo")
 store = {}
 
@@ -13,7 +13,7 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
         store[session_id] = InMemoryChatMessageHistory()
     return store[session_id]
 
-# Prompt + Mesaj geçmişi
+
 prompt = ChatPromptTemplate.from_messages(
     [
         (

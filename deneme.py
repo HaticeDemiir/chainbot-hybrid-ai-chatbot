@@ -4,18 +4,18 @@ import os
 from dotenv import load_dotenv
 from langchain_community.graphs import Neo4jGraph
 
-# Ortam değişkenlerini yükle
+
 load_dotenv()
 database = os.getenv("NEO4J_DATABASE")
 
-# Wait 60 seconds before connecting using these details, or login to https://console.neo4j.io to validate the Aura Instance is available
-NEO4J_URI="neo4j+ssc://ae504ea9.databases.neo4j.io"
-NEO4J_USERNAME="neo4j"
-NEO4J_PASSWORD="7PD6uEL8HLpzUFV5UamAkeOvCN6BDBsuu8eFYqMBP30"
-AURA_INSTANCEID="ae504ea9"
+
+NEO4J_URI="XXXX"
+NEO4J_USERNAME="XXXX"
+NEO4J_PASSWORD="XXXX"
+AURA_INSTANCEID="XXXX"
 AURA_INSTANCENAME="Free instance"
 
-# Neo4j bağlantısı
+
 graph = Neo4jGraph(
     url=NEO4J_URI,
     username=NEO4J_USERNAME,
@@ -23,14 +23,12 @@ graph = Neo4jGraph(
     database=database
 )
 
-# CSV dosyalarını oku
+
 segments_df = pd.read_csv("Datas/final_segments.csv")
 clusters_df = pd.read_csv("Datas/segment_cluster.csv")
 discounts_df = pd.read_csv("Datas/final_discount2.csv", sep=";")
 
-# ----------------------------
-# 1. SegmentCluster ↔ SegmentType ↔ ControlTable ↔ Value
-# ----------------------------
+
 for _, row in clusters_df.iterrows():
     try:
         cid = int(row["segment_clusterid"])
@@ -76,9 +74,7 @@ for _, row in clusters_df.iterrows():
     except Exception as e:
         print(f"SegmentCluster yükleme hatası: {e}")
 
-# ----------------------------
-# 2. FinalSegment → SegmentCluster bağlantısı
-# ----------------------------
+
 for _, row in segments_df.iterrows():
     try:
         final_id = int(row["final_segment_id"])
@@ -101,15 +97,13 @@ for _, row in segments_df.iterrows():
     except Exception as e:
         print(f"FinalSegment bağlama hatası: {e}")
 
-# ----------------------------
-# 3. FinalSegment → Category bağlantısı (HAS_DISCOUNT)
-# ----------------------------
+
 for _, row in discounts_df.iterrows():
     try:
         seg_id = int(row["final_segment_id"])
         category = row["Category"]
         disc_ratio = float(row["Discount_Ratio"])
-        pred_ratio = float(row["Predicted_Ratio"])  # Bu sütun varsa
+        pred_ratio = float(row["Predicted_Ratio"])
 
         parameters = {
             "Segment": seg_id,

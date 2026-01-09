@@ -4,13 +4,13 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader, PyPDFLoader, CSVLoader
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
-import fitz  # PyMuPDF
-from langchain.schema import Document  # String'i Document formatına çevirmek için
+import fitz
+from langchain.schema import Document
 
-# Ortam değişkenlerini yükle
+
 load_dotenv()
 
-#  URL'lerden veri yükleme (headers kaldırıldı)
+
 urls = [
     "https://corporate.lcwaikiki.com/hakkimizda",
     "https://corporate.lcwaikiki.com/ekoloji",
@@ -33,7 +33,7 @@ for url in urls:
     except Exception as e:
         print(f"{url} yüklenirken hata oluştu: {e}")
 
-# 📌 3 PDF dosyasını yükleme (PyMuPDF ile "Document" formatında)
+
 pdf_paths = [
     "data/Beden.pdf",
     "data/MagazaBilgisi.pdf",
@@ -50,7 +50,7 @@ for path in pdf_paths:
         print(f" {path} yüklenirken hata oluştu: {e}")
 
 
-# 📌 CSV dosyası yükleme (Opsiyonel)
+
 csv_docs = []
 try:
     csv_loader = CSVLoader(file_path="data/train-00000-of-00001.csv")
@@ -60,18 +60,18 @@ except Exception as e:
 
 
 
-# 📌 Tüm veriyi birleştir
+
 all_docs = docs_list + pdf_docs + csv_docs
 
-# 📌 Veriyi böl
+
 text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-    chunk_size=500,  # eskisi 250 idi
-    chunk_overlap=50  # daha iyi bağlam için
+    chunk_size=500,
+    chunk_overlap=50
 )
 
 doc_splits = text_splitter.split_documents(all_docs)
 
-# 📌 Chroma vektör veritabanına kaydet
+
 vectorstore = Chroma.from_documents(
      documents=doc_splits,
      collection_name="rag-chroma",
@@ -79,7 +79,7 @@ vectorstore = Chroma.from_documents(
      persist_directory="./.chroma",
  )
 
-# 📌 Retriever oluştur
+
 retriever = Chroma(
     collection_name="rag-chroma",
     persist_directory="./.chroma",

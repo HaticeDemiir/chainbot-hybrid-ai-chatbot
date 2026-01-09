@@ -24,7 +24,7 @@ def get_session_history(session_id: str):
         store[session_id] = InMemoryChatMessageHistory()
     return store[session_id]
 
-# Kişiselleştirilmiş sistem prompt'u
+
 daily_prompt = ChatPromptTemplate.from_messages([
     (
         "system",
@@ -61,7 +61,7 @@ with_message_history = RunnableWithMessageHistory(
     input_messages_key="messages",
     history_messages_key="messages",
 )
-#  LLM RESPONSE node
+
 def llm_response(state: GraphState) -> Dict[str, Any]:
     print("---LLM RESPONSE---")
     question = state["question"]
@@ -74,21 +74,21 @@ def llm_response(state: GraphState) -> Dict[str, Any]:
 
     if not profile_info:
         history = get_session_history(session_id)
-        for msg in reversed(history.messages):  # En son mesajdan başlayarak ara
+        for msg in reversed(history.messages):
             if msg.type == "system" and "Kullanıcı :" in msg.content:
-                # İçerikten profile_info kısmını ayıkla
+
                 start = msg.content.find("Kullanıcı :")
                 profile_info = msg.content[start:].replace("Kullanıcı :", "").strip()
                 break
 
-    # Mesajları hazırla
+
     history = get_session_history(session_id)
     history.add_user_message(question)
-    messages = history.messages  # Tüm geçmişi gönder
+    messages = history.messages
 
     config = {"configurable": {"session_id": session_id}}
 
-    # LLM çağrısı
+
     response = with_message_history.invoke(
         {"messages": messages, "profile_info": profile_info},
         config=config

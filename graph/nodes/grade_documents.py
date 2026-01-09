@@ -23,7 +23,7 @@ def grade_documents(state: GraphState) -> Dict[str, Any]:
         else:
             print("---GRADE: DOCUMENT NOT RELEVANT---")
 
-    # 📌 Eğer belgelerin %50'sinden fazlası relevant ise → Web search yapma
+
     web_search = relevant_count < total / 2
     generation_grade = "not useful" if web_search else "useful"
 
