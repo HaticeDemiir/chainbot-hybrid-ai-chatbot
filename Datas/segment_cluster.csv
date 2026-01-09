@@ -1,0 +1,15 @@
+"segment_clusterid","segment_typeid","cluster_name","min","max","control_column","control_table","value"
+131,1,"AgeCluster1",18,33,"age","customer_info",NULL
+132,1,"AgeCluster2",34,70,"age","customer_info",NULL
+133,5,"IncomeCluster1",NULL,NULL,"income","customer_info","High"
+134,5,"IncomeCluster2",NULL,NULL,"income","customer_info","Low"
+135,5,"IncomeCluster3",NULL,NULL,"income","customer_info","Medium"
+136,5,"IncomeCluster4",NULL,NULL,"income","customer_info","Unknown"
+137,6,"CustomerSegment1",NULL,NULL,"customer_segment","customer_info","Unknown"
+138,6,"CustomerSegment2",NULL,NULL,"customer_segment","customer_info","New"
+139,6,"CustomerSegment3",NULL,NULL,"customer_segment","customer_info","Regular"
+140,6,"CustomerSegment4",NULL,NULL,"customer_segment","customer_info","Premium"
+141,8,"TotalPurchaseCluster1",0,5631,"total_customer_purchase","customer_shopping_info",NULL
+142,8,"TotalPurchaseCluster2",5632,29241,"total_customer_purchase","customer_shopping_info",NULL
+143,7,"ShoppingCountCluster1",5,13,"shopping_count","customer_shopping_info",NULL
+144,7,"ShoppingCountCluster2",1,4,"shopping_count","customer_shopping_info",NULL

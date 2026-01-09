@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>LC Waikiki Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    #chatContainer {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      height: 70vh;
+      overflow-y: auto;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+
+    .user {
+      background-color: #dcf8c6;
+      align-self: flex-end;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .bot {
+      background-color: #e4e4e4;
+      align-self: flex-start;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    #inputContainer {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    #userInput {
+      width: 70%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin-left: 10px;
+      border: none;
+      background-color: #2e86de;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2169b5;
+    }
+  </style>
+</head>
+<body>
+  <h1>LC Waikiki Chatbot</h1>
+  <div id="chatContainer"></div>
+
+  <div id="inputContainer">
+    <input type="text" id="userInput" placeholder="Bir şey yaz..." />
+    <button onclick="sendMessage()">Gönder</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (!message) return;
+
+      addMessage(message, "user");
+      input.value = "";
+
+      const res = await fetch("http://localhost:8000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: message,
+          session_id: "firstChat"
+        })
+      });
+
+      const data = await res.json();
+      addMessage(data.response, "bot");
+    }
+
+    function addMessage(text, sender) {
+      const container = document.getElementById("chatContainer");
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${sender}`;
+      messageDiv.innerText = sender === "bot" ? "🤖 " + text : text;
+      container.appendChild(messageDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+  </script>
+</body>
+</html>

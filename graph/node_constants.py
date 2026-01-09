@@ -1,0 +1,7 @@
+RETRIEVE = "Retrieve"
+GRADE_DOCUMENTS = "Grade_Documents"
+GENERATE = "Generate"
+WEBSEARCH = "WebSearch"
+LLM_RESPONSE = "LLM_Response"
+KNOWLEGDE_GRAPH= "Knowledge_Graph"
+EXTRACT = "Extract"
