@@ -22,7 +22,7 @@ The system is designed to be adaptable across different industries such as retai
 
 The system uses **LangGraph** to control conversational flow and dynamically select the appropriate response strategy.
 
-![Architecture Diagram](graph.png)
+![Architecture Diagram](system_architecture.png)
 
 ---
 
